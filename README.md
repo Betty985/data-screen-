@@ -1,0 +1,1 @@
+[only-allow]https://www.npmjs.com/package/only-allow)
