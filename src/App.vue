@@ -2,7 +2,9 @@
 import componentsList from "@/components/components-list.vue";
 // 静态配置
 import * as CONFIG from "@/constants/config";
-import { ref, inject } from "vue";
+import * as elementui from "./components/elementui";
+import { ElEmpty } from "element-plus";
+import { ref, markRaw, inject } from "vue";
 const siderType = ref("components");
 // 操作区域的组件
 let content = ref([]);
@@ -15,28 +17,27 @@ let curCom = null;
 let Id = ref(1);
 function drag(e, i) {
   comX = e.offsetX;
-  comY = e.offsetX;
+  comY = e.offsetY;
   curCom = i;
 }
 // 失去焦点
-function unfocuse(i) {
+function unfocuse(cur) {
   // 其他项失去焦点
-  for (let item of content.value) {
-    if (item.id != i.id) {
-      item.focus = false;
-    }
-  }
+  content.value = content.value.map((item) => {
+    item.focus = item.id === cur.id;
+    return item;
+  });
 }
+
 function onDrop(e, i) {
-  let x = e.clientX - comX,
-    y = e.clientY - comY;
+  let x = e.pageX - comX,
+    y = e.pageY - comY;
   Id.value = Id.value + 1;
   let newItem = {
     id: Id.value,
     x,
     y,
-    label: curCom.label,
-    type: curCom.type,
+    ...curCom,
     focus: true,
   };
   unfocuse(newItem);
@@ -51,6 +52,33 @@ function onContextMenuOpen(e, i) {
   emitContext(e, { name: "context-menu" });
   // 其他项失去焦点
   unfocuse(i);
+}
+function onLayerTop() {
+  const currentItem = content.value.find((item) => item.focused);
+  const maxZ = findTopLayerZ(currentItem);
+  if (!maxZ) {
+    return;
+  }
+  currentItem.z = maxZ + 1;
+  sortList();
+}
+// 找到最顶层的z
+function findTopLayerZ(currentItem) {
+  const maxZ = Math.max(...content.value.map((item) => item?.z)) || 0;
+  if (currentItem?.z === maxZ) {
+    alert("已经是最顶层了");
+    return;
+  }
+  return maxZ;
+}
+// 将列表按z从大到小排列
+function sortList() {
+  content.value.sort((a, b) => b.z - a.z);
+}
+// 移除图层
+function onLayerRemove() {
+  content.value = content.value.filter((item) => !item.focus);
+  sortList();
 }
 </script>
 
@@ -72,20 +100,28 @@ function onContextMenuOpen(e, i) {
         :y="item.y"
         v-for="(item, index) in content"
         :key="index"
+        @click="unfocuse(item)"
         @contextmenu.prevent="onContextMenuOpen($event, item)"
       >
-        <h3>{{ item.label }}</h3>
+        <!-- @drop.native.stop="onDrop($event, index)" -->
+        <component
+          class="inner-widget"
+          :is="ElEmpty"
+          :value="item.value"
+          :styles="item.styles"
+          @drop.stop="onDrop($event, index)"
+        />
       </Dragger>
     </div>
     <div class="right">2</div>
   </div>
   <!-- 右键菜单 -->
   <context-menu name="context-menu" ref="contextMenu">
-    <context-menu-item>置顶</context-menu-item>
+    <context-menu-item @click.prevent="onLayerTop">置顶</context-menu-item>
     <context-menu-item>置底</context-menu-item>
     <context-menu-item>上移图层</context-menu-item>
     <context-menu-item>下移图层</context-menu-item>
-    <context-menu-item>删除</context-menu-item>
+    <context-menu-item @click.prevent="onLayerRemove">删除</context-menu-item>
   </context-menu>
 </template>
 

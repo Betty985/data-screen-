@@ -6,7 +6,6 @@ import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import contextmenu from "vue3-contextmenu";
 import "vue3-contextmenu/dist/vue3-contextmenu.css";
-
 import VueDragResize from "vue-drag-resize";
 const app = createApp(App);
 app.use(createPinia());

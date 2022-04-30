@@ -5,8 +5,8 @@ export const List = [
     label: "文字",
   },
   {
-    type: "1",
-    component: "1",
+    type: "button",
+    component: "ElButton ",
     label: "按钮",
   },
   {
