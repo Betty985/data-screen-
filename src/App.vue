@@ -2,7 +2,7 @@
 import componentsList from "@/components/components-list.vue";
 // 静态配置
 import * as CONFIG from "@/constants/config";
-import { ref } from "vue";
+import { ref, inject } from "vue";
 const siderType = ref("components");
 // 操作区域的组件
 let content = ref([]);
@@ -18,29 +18,44 @@ function drag(e, i) {
   comY = e.offsetX;
   curCom = i;
 }
+// 失去焦点
+function unfocuse(i) {
+  // 其他项失去焦点
+  for (let item of content.value) {
+    if (item.id != i.id) {
+      item.focus = false;
+    }
+  }
+}
 function onDrop(e, i) {
   let x = e.clientX - comX,
     y = e.clientY - comY;
-  Id = Id.value + 1;
+  Id.value = Id.value + 1;
   let newItem = {
-    id: Id,
+    id: Id.value,
     x,
     y,
     label: curCom.label,
     type: curCom.type,
     focus: true,
   };
-  for (let item of content.value) {
-    if (item.id != Id.value) {
-      item.focus = false;
-    }
-  }
+  unfocuse(newItem);
   content.value.push(newItem);
+}
+// 打开右键菜单
+const emitContext = inject("emitContext");
+function onContextMenuOpen(e, i) {
+  // 给当前项获取焦点
+  i.focus = true;
+  // 打开右键菜单
+  emitContext(e, { name: "context-menu" });
+  // 其他项失去焦点
+  unfocuse(i);
 }
 </script>
 
 <template>
-  <div id="main">
+  <div id="main" @contextmenu.prevent>
     <el-tabs v-model="siderType" class="left">
       <el-tab-pane label="图层" name="layer">图层</el-tab-pane>
       <el-tab-pane label="组件" name="components">
@@ -57,12 +72,21 @@ function onDrop(e, i) {
         :y="item.y"
         v-for="(item, index) in content"
         :key="index"
+        @contextmenu.prevent="onContextMenuOpen($event, item)"
       >
         <h3>{{ item.label }}</h3>
       </Dragger>
     </div>
     <div class="right">2</div>
   </div>
+  <!-- 右键菜单 -->
+  <context-menu name="context-menu" ref="contextMenu">
+    <context-menu-item>置顶</context-menu-item>
+    <context-menu-item>置底</context-menu-item>
+    <context-menu-item>上移图层</context-menu-item>
+    <context-menu-item>下移图层</context-menu-item>
+    <context-menu-item>删除</context-menu-item>
+  </context-menu>
 </template>
 
 <style scoped>
