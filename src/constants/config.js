@@ -8,9 +8,10 @@ export const List = [
     type: "button",
     component: "btn",
     label: "按钮",
-    // w: 100,
-    // h: 50,
+
     style: {
+      width: "100px",
+      height: "100px",
       background: "red",
     },
   },

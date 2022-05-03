@@ -4,50 +4,16 @@ import componentsList from "@/components/components-list.vue";
 import * as CONFIG from "@/constants/config";
 import obj from "@/components";
 import { ref, markRaw, inject } from "vue";
+// import { useApp } from "@/hooks/useApp";
+import { useDrag } from "@/hooks/useDrag";
+import right from "@/components/right/right.vue";
+
 const siderType = ref("components");
-// 操作区域的组件
-let content = ref([]);
-// 组件初始坐标
-let comX = 0,
-  comY = 0;
-// 当前组件
-let curCom = null;
-// 组件ID
-let Id = ref(1);
-function drag(e, i) {
-  comX = e.offsetX;
-  comY = e.offsetY;
-  curCom = i;
-}
-// 失去焦点
-function unfocuse(cur) {
-  // 其他项失去焦点
-  content.value = content.value.map((item) => {
-    item.focus = item.id === cur.id;
-    return item;
-  });
-}
 
-function onDrop(e, i) {
-  let x = e.pageX - comX,
-    y = e.pageY - comY;
-  Id.value = Id.value + 1;
-  let newItem = {
-    ...curCom,
-    id: Id.value,
-    x,
-    y,
-    component: markRaw(obj[curCom.component]),
-    // 新增的面板项层级应该最高
-    z: !content.value.length
-      ? 0
-      : Math.max(...content.value.map((item) => item.z)) + 1,
-    focus: true,
-  };
+// let { curCom, content, drag, comX, comY } = useApp();
+let { curCom, content, comX, comY, findFocus, unfocuse, onDrag, onDrop } =
+  useDrag();
 
-  unfocuse(newItem);
-  content.value.push(newItem);
-}
 // 打开右键菜单
 const emitContext = inject("emitContext");
 function onContextMenuOpen(e, i) {
@@ -95,14 +61,14 @@ function onLayerRemove() {
       <el-tab-pane label="图层" name="layer">图层</el-tab-pane>
       <el-tab-pane label="组件" name="components">
         <!-- 组件列表 -->
-        <components-list :list="CONFIG.List" @drag="drag"></components-list>
+        <components-list :list="CONFIG.List" @drag="onDrag"></components-list>
       </el-tab-pane>
     </el-tabs>
     <div class="center" @dragover.prevent @drop="onDrop">
       <Dragger
         :isActive="item.focus"
-        :w="item.style.width ? 200 : parseInt(item.style.width)"
-        :h="item.style.height ? 200 : parseInt(item.style.height)"
+        :w="item.style.width ? parseInt(item.style.width) : 200"
+        :h="item.style.height ? parseInt(item.style.height) : 200"
         :x="item.x"
         :y="item.y"
         :z="item.z"
@@ -121,7 +87,7 @@ function onLayerRemove() {
         />
       </Dragger>
     </div>
-    <div class="right">2</div>
+    <div class="right"><right /></div>
   </div>
   <!-- 右键菜单 -->
   <context-menu name="context-menu" ref="contextMenu" style="zindex: 9999">
