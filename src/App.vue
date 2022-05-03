@@ -2,8 +2,7 @@
 import componentsList from "@/components/components-list.vue";
 // 静态配置
 import * as CONFIG from "@/constants/config";
-import * as elementui from "./components/elementui";
-import { ElEmpty } from "element-plus";
+import obj from "@/components";
 import { ref, markRaw, inject } from "vue";
 const siderType = ref("components");
 // 操作区域的组件
@@ -34,12 +33,18 @@ function onDrop(e, i) {
     y = e.pageY - comY;
   Id.value = Id.value + 1;
   let newItem = {
+    ...curCom,
     id: Id.value,
     x,
     y,
-    ...curCom,
+    component: markRaw(obj[curCom.component]),
+    // 新增的面板项层级应该最高
+    z: !content.value.length
+      ? 0
+      : Math.max(...content.value.map((item) => item.z)) + 1,
     focus: true,
   };
+
   unfocuse(newItem);
   content.value.push(newItem);
 }
@@ -59,11 +64,13 @@ function onLayerTop() {
   if (!maxZ) {
     return;
   }
+  console.log(currentItem);
   currentItem.z = maxZ + 1;
   sortList();
 }
 // 找到最顶层的z
 function findTopLayerZ(currentItem) {
+  console.log(content.value);
   const maxZ = Math.max(...content.value.map((item) => item?.z)) || 0;
   if (currentItem?.z === maxZ) {
     alert("已经是最顶层了");
@@ -94,21 +101,22 @@ function onLayerRemove() {
     <div class="center" @dragover.prevent @drop="onDrop">
       <Dragger
         :isActive="item.focus"
-        :w="100"
-        :h="50"
+        :w="item.style.width ? 200 : parseInt(item.style.width)"
+        :h="item.style.height ? 200 : parseInt(item.style.height)"
         :x="item.x"
         :y="item.y"
+        :z="item.z"
         v-for="(item, index) in content"
-        :key="index"
+        :key="item.id"
         @click="unfocuse(item)"
         @contextmenu.prevent="onContextMenuOpen($event, item)"
       >
         <!-- @drop.native.stop="onDrop($event, index)" -->
         <component
           class="inner-widget"
-          :is="ElEmpty"
+          :is="item.component"
           :value="item.value"
-          :styles="item.styles"
+          :styles="item.style"
           @drop.stop="onDrop($event, index)"
         />
       </Dragger>
@@ -116,7 +124,7 @@ function onLayerRemove() {
     <div class="right">2</div>
   </div>
   <!-- 右键菜单 -->
-  <context-menu name="context-menu" ref="contextMenu">
+  <context-menu name="context-menu" ref="contextMenu" style="zindex: 9999">
     <context-menu-item @click.prevent="onLayerTop">置顶</context-menu-item>
     <context-menu-item>置底</context-menu-item>
     <context-menu-item>上移图层</context-menu-item>

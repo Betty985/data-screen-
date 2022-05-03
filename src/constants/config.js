@@ -6,12 +6,24 @@ export const List = [
   },
   {
     type: "button",
-    component: "ElButton ",
+    component: "btn",
     label: "按钮",
+    // w: 100,
+    // h: 50,
+    style: {
+      background: "red",
+    },
   },
   {
     type: "1",
-    component: "1",
+    component: "video",
     label: "视频",
+    w: 400,
+    h: 150,
+    style: {
+      width: "400px",
+      height: "150px",
+      background: "red",
+    },
   },
 ];
