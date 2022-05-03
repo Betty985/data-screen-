@@ -1,6 +1,6 @@
 <script setup>
-import { useApp } from "@/hooks/useApp";
-let { curCom } = useApp();
+import { useDrag } from "@/hooks/useDrag";
+let { curCom } = useDrag();
 </script>
 
 <template>

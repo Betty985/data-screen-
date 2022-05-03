@@ -44,7 +44,7 @@ export function useDrag() {
     content.value.push(newItem);
   }
   function findFocus() {
-    curCom.value = content.value.find((item) => item.focused);
+    return content.value.find((item) => item.focus);
   }
 
   return {

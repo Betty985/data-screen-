@@ -2,20 +2,15 @@
 import componentsList from "@/components/components-list.vue";
 // 静态配置
 import * as CONFIG from "@/constants/config";
-import obj from "@/components";
 import { ref, markRaw, inject } from "vue";
-// import { useApp } from "@/hooks/useApp";
 import { useDrag } from "@/hooks/useDrag";
+import { useContextMenu } from "@/hooks/useContextMenu";
 import right from "@/components/right/right.vue";
-
-const siderType = ref("components");
-
-// let { curCom, content, drag, comX, comY } = useApp();
-let { curCom, content, comX, comY, findFocus, unfocuse, onDrag, onDrop } =
-  useDrag();
-
+let { curCom, content, unfocuse, onDrag, onDrop } = useDrag();
+let { onLayerRemove, onLayerTop } = useContextMenu();
 // 打开右键菜单
 const emitContext = inject("emitContext");
+// 打开右键菜单
 function onContextMenuOpen(e, i) {
   // 给当前项获取焦点
   i.focus = true;
@@ -24,35 +19,7 @@ function onContextMenuOpen(e, i) {
   // 其他项失去焦点
   unfocuse(i);
 }
-function onLayerTop() {
-  const currentItem = content.value.find((item) => item.focused);
-  const maxZ = findTopLayerZ(currentItem);
-  if (!maxZ) {
-    return;
-  }
-  console.log(currentItem);
-  currentItem.z = maxZ + 1;
-  sortList();
-}
-// 找到最顶层的z
-function findTopLayerZ(currentItem) {
-  console.log(content.value);
-  const maxZ = Math.max(...content.value.map((item) => item?.z)) || 0;
-  if (currentItem?.z === maxZ) {
-    alert("已经是最顶层了");
-    return;
-  }
-  return maxZ;
-}
-// 将列表按z从大到小排列
-function sortList() {
-  content.value.sort((a, b) => b.z - a.z);
-}
-// 移除图层
-function onLayerRemove() {
-  content.value = content.value.filter((item) => !item.focus);
-  sortList();
-}
+const siderType = ref("components");
 </script>
 
 <template>
@@ -90,9 +57,9 @@ function onLayerRemove() {
     <div class="right"><right /></div>
   </div>
   <!-- 右键菜单 -->
-  <context-menu name="context-menu" ref="contextMenu" style="zindex: 9999">
+  <context-menu name="context-menu">
     <context-menu-item @click.prevent="onLayerTop">置顶</context-menu-item>
-    <context-menu-item>置底</context-menu-item>
+    <context-menu-item @click.prevent="">置底</context-menu-item>
     <context-menu-item>上移图层</context-menu-item>
     <context-menu-item>下移图层</context-menu-item>
     <context-menu-item @click.prevent="onLayerRemove">删除</context-menu-item>

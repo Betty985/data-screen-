@@ -3,7 +3,6 @@
 let props = defineProps({
   styles: Object,
 });
-console.log(props);
 </script>
 
 <template>
