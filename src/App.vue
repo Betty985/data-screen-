@@ -66,6 +66,11 @@ const siderType = ref("components");
   </context-menu>
 </template>
 
+<style>
+.v-contextmenu {
+  z-index: 9999;
+}
+</style>
 <style scoped>
 #main {
   display: flex;
