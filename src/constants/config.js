@@ -10,22 +10,21 @@ export const List = [
     type: "button",
     component: "btn",
     label: "按钮",
-    w: 100,
+    w: 120,
     h: 40,
     style: {
-      backgroundColor: "black",
       height: "100%",
-      fontSize: "20px",
+      fontSize: "18px",
     },
   },
   {
     type: "card",
     component: "card",
     label: "卡片",
-    w: 100,
-    h: 40,
+    w: 200,
+    h: 100,
     style: {
-      backgroundColor: "black",
+      backgroundColor: "snow",
       height: "100%",
       fontSize: "20px",
     },
@@ -39,7 +38,6 @@ export const List = [
     style: {
       width: "400px",
       height: "150px",
-      background: "red",
     },
   },
 ];

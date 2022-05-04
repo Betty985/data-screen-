@@ -20,14 +20,31 @@ export function useContextMenu() {
   function onLayerBottom() {
     curCom.value = findFocus();
     let minZ = Math.min(...content.value.map((item) => item?.z));
-    console.log(curCom.value.z, 1);
-    curCom.value.z = minZ - 1 < 0 ? 0 : minZ - 1 < 0;
-    console.log(curCom.value.z, 2);
+    if (curCom.value.z == 0) {
+      ElMessage.error("已经到最底层了~");
+      return;
+    }
+    curCom.value.z = minZ - 1 < 0 ? 0 : minZ - 1;
   }
-
+  // 上移一层
+  function onLayerup() {
+    curCom.value = findFocus();
+    curCom.value.z = curCom.value.z + 1;
+  }
+  // 下移一层
+  function onLayerdown() {
+    curCom.value = findFocus();
+    if (curCom.value.z == 0) {
+      ElMessage.error("已经到最底层了~");
+      return;
+    }
+    curCom.value.z = curCom.value.z - 1 < 0 ? 0 : curCom.value.z - 1;
+  }
   return {
     onLayerRemove,
     onLayerTop,
     onLayerBottom,
+    onLayerup,
+    onLayerdown,
   };
 }
