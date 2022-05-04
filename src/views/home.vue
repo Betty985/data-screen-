@@ -5,7 +5,7 @@ import * as CONFIG from "@/constants/config";
 import { ref, markRaw, inject } from "vue";
 import { useDrag } from "@/hooks/useDrag";
 import { useContextMenu } from "@/hooks/useContextMenu";
-import right from "@/components/right/right.vue";
+import attrs from "@/components/attrs/index.vue";
 import toolbox from "@/components/toolbox/index.vue";
 let { content, unfocuse, onDrag, onDrop } = useDrag();
 let { onLayerRemove, onLayerTop, onLayerBottom, onLayerup, onLayerdown } =
@@ -57,7 +57,7 @@ const siderType = ref("components");
         />
       </Dragger>
     </div>
-    <div class="right" @click="unfocuse()"><right /></div>
+    <div class="right" @click="unfocuse()"><attrs /></div>
   </div>
   <!-- 右键菜单 -->
   <context-menu name="context-menu">

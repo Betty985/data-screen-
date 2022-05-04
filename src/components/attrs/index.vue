@@ -4,7 +4,9 @@ let { curCom } = useDrag();
 </script>
 
 <template>
-  <div>{{ curCom }}</div>
+  <div v-for="item of curCom" :key="item.id">
+    {{ item.label }}
+  </div>
 </template>
 
 <style scoped></style>

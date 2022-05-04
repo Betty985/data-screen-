@@ -6,7 +6,7 @@ let { content } = useDrag();
 </script>
 
 <template>
-  <div>
+  <div class="container">
     <pre-view
       v-for="item in content"
       :key="item.id"
@@ -15,7 +15,8 @@ let { content } = useDrag();
       :x="item.x"
       :y="item.y"
       :z="item.z"
-      ><component
+    >
+      <component
         :is="item.component"
         :value="item.value"
         :styles="item.style"
@@ -24,4 +25,13 @@ let { content } = useDrag();
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: url("https://th.bing.com/th/id/OIP.I_uvScRFnaTepA9OOcNf3gHaEK?pid=ImgDet&rs=1")
+    no-repeat left top;
+  background-size: cover;
+}
+</style>
