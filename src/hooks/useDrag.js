@@ -14,7 +14,7 @@ export function useDrag() {
   function unfocuse(cur) {
     // 其他项失去焦点
     content.value = content.value.map((item) => {
-      item.focus = item.id === cur.id;
+      item.focus = item.id === cur?.id;
       return item;
     });
   }

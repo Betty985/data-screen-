@@ -10,25 +10,24 @@ export function useContextMenu() {
   function onLayerRemove() {
     content.value = content.value.filter((item) => !item.focus);
   }
+  //置顶
   function onLayerTop() {
     curCom.value = findFocus();
-    let maxZ = findTopLayerZ(curCom.value);
-    if (!maxZ) {
-      return;
-    }
+    let maxZ = Math.max(...content.value.map((item) => item?.z)) || 0;
     curCom.value.z = maxZ + 1;
   }
-  // 找到最顶层的z
-  function findTopLayerZ(currentItem) {
-    const maxZ = Math.max(...content.value.map((item) => item?.z)) || 0;
-    if (currentItem?.z === maxZ) {
-      ElMessage.error("已经是最顶层了");
-      return;
-    }
-    return maxZ;
+  // 置底
+  function onLayerBottom() {
+    curCom.value = findFocus();
+    let minZ = Math.min(...content.value.map((item) => item?.z));
+    console.log(curCom.value.z, 1);
+    curCom.value.z = minZ - 1 < 0 ? 0 : minZ - 1 < 0;
+    console.log(curCom.value.z, 2);
   }
+
   return {
     onLayerRemove,
     onLayerTop,
+    onLayerBottom,
   };
 }

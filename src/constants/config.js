@@ -1,3 +1,5 @@
+import { color } from "echarts";
+
 export const List = [
   {
     type: "1",
@@ -11,7 +13,21 @@ export const List = [
     w: 100,
     h: 40,
     style: {
-      background: "black",
+      backgroundColor: "black",
+      height: "100%",
+      fontSize: "20px",
+    },
+  },
+  {
+    type: "card",
+    component: "card",
+    label: "卡片",
+    w: 100,
+    h: 40,
+    style: {
+      backgroundColor: "black",
+      height: "100%",
+      fontSize: "20px",
     },
   },
   {

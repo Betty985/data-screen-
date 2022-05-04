@@ -6,8 +6,8 @@ import { ref, markRaw, inject } from "vue";
 import { useDrag } from "@/hooks/useDrag";
 import { useContextMenu } from "@/hooks/useContextMenu";
 import right from "@/components/right/right.vue";
-let { curCom, content, unfocuse, onDrag, onDrop } = useDrag();
-let { onLayerRemove, onLayerTop } = useContextMenu();
+let { content, unfocuse, onDrag, onDrop } = useDrag();
+let { onLayerRemove, onLayerTop, onLayerBottom } = useContextMenu();
 // 打开右键菜单
 const emitContext = inject("emitContext");
 // 打开右键菜单
@@ -31,7 +31,7 @@ const siderType = ref("components");
         <components-list :list="CONFIG.List" @drag="onDrag"></components-list>
       </el-tab-pane>
     </el-tabs>
-    <div class="center" @dragover.prevent @drop="onDrop">
+    <div class="center" @dragover.prevent @drop="onDrop" @click="unfocuse()">
       <Dragger
         :isActive="item.focus"
         :w="item.style.width ? parseInt(item.style.width) : 200"
@@ -59,7 +59,7 @@ const siderType = ref("components");
   <!-- 右键菜单 -->
   <context-menu name="context-menu">
     <context-menu-item @click.prevent="onLayerTop">置顶</context-menu-item>
-    <context-menu-item @click.prevent="">置底</context-menu-item>
+    <context-menu-item @click.prevent="onLayerBottom">置底</context-menu-item>
     <context-menu-item>上移图层</context-menu-item>
     <context-menu-item>下移图层</context-menu-item>
     <context-menu-item @click.prevent="onLayerRemove">删除</context-menu-item>

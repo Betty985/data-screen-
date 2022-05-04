@@ -7,9 +7,9 @@ let props = defineProps({
 
 <template>
   <div>
-    <el-button :style="styles">
+    <el-card :style="styles">
       <slot>hello world</slot>
-    </el-button>
+    </el-card>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ div {
   width: 100%;
   height: 100%;
 }
-:deep(.el-button) {
+:deep(.el-card) {
   width: 100%;
   height: 100%;
 }
