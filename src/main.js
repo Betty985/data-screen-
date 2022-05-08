@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
+import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import contextmenu from "vue3-contextmenu";
 import "vue3-contextmenu/dist/vue3-contextmenu.css";
 import VueDragResize from "vue-drag-resize";
@@ -20,4 +21,7 @@ app.use((Vue) => {
 });
 app.use(router);
 app.use(ElementPlus);
+for (let [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component);
+}
 app.mount("#app");

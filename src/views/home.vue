@@ -90,7 +90,7 @@ const siderType = ref("components");
   background-color: rgb(226, 245, 250);
 }
 .right {
-  width: 200px;
+  width: 300px;
   background-color: rgb(252, 232, 232);
 }
 </style>
