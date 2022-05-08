@@ -21,12 +21,26 @@ function onContextMenuOpen(e, i) {
   // 其他项失去焦点
   unfocuse(i);
 }
+// 右边区域宽度可变
+let state = ref();
+let dom = ref();
 const siderType = ref("components");
+function down() {
+  state.value = "down";
+}
+function move(e) {
+  let w = window.innerWidth - e.pageX;
+  if (state.value != "down" || w > window.innerWidth / 2) return;
+  dom.value.style.width = `${w}px`;
+}
+function up() {
+  state.value = "up";
+}
 </script>
 
 <template>
   <toolbox></toolbox>
-  <div id="main" @contextmenu.prevent>
+  <div id="main" @contextmenu.prevent @mousemove="move" @mouseup="up">
     <el-tabs v-model="siderType" class="left">
       <el-tab-pane label="图层" name="layer">图层</el-tab-pane>
       <el-tab-pane label="组件" name="components">
@@ -57,7 +71,15 @@ const siderType = ref("components");
         />
       </Dragger>
     </div>
-    <div class="right" @click="unfocuse()"><attrs /></div>
+    <div
+      class="right"
+      ref="dom"
+      @click="unfocuse()"
+      @mousedown="down"
+      @mouseup="up"
+    >
+      <attrs />
+    </div>
   </div>
   <!-- 右键菜单 -->
   <context-menu name="context-menu">
@@ -92,5 +114,6 @@ const siderType = ref("components");
 .right {
   width: 300px;
   background-color: rgb(252, 232, 232);
+  cursor: e-resize;
 }
 </style>

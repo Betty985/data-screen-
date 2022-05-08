@@ -12,26 +12,22 @@ let alignOptions = ref([
 
 export function useStyle() {
   let geometry = ref([
-    [
-      {
-        label: "X",
-        key: "x",
-      },
-      {
-        label: "Y",
-        key: "y",
-      },
-    ],
-    [
-      {
-        label: "宽",
-        key: "w",
-      },
-      {
-        label: "高",
-        key: "h",
-      },
-    ],
+    {
+      label: "X",
+      key: "x",
+    },
+    {
+      label: "Y",
+      key: "y",
+    },
+    {
+      label: "宽",
+      key: "w",
+    },
+    {
+      label: "高",
+      key: "h",
+    },
   ]);
   function align(type) {
     switch (type) {
